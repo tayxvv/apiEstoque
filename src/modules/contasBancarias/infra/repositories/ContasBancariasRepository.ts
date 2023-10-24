@@ -41,6 +41,13 @@ class ContasBancariasRepository implements IContasBancariasRepository {
 
     return contaBancaria;
   }
+
+  async selectAll(): Promise<ContaBancaria[]> {
+    const contaBancarias = await this.connection.query(
+      "SELECT * FROM conta_bancaria"
+    );
+    return contaBancarias;
+  }
 }
 
 export { ContasBancariasRepository };
