@@ -55,6 +55,7 @@ CREATE TABLE conta_bancaria(
 	nome_conta text,
 	id_tipo_conta int4 not null,
 	id_usuario int4 not null,
+	created_at date default now(),
 	CONSTRAINT pk_id_conta PRIMARY KEY (id_conta)
 );
 
