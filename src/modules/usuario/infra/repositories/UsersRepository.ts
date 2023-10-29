@@ -41,6 +41,11 @@ class UsersRepository implements IUserRepository {
       throw error;
     }
   }
+
+  async selectAll(): Promise<User[]> {
+    const usuarios = await this.connection.query("SELECT * FROM usuario");
+    return usuarios;
+  }
 }
 
 export { UsersRepository };

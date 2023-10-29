@@ -5,6 +5,8 @@ import { IContasBancariasRepository } from "../../modules/contasBancarias/reposi
 import { ContasBancariasRepository } from "../../modules/contasBancarias/infra/repositories/ContasBancariasRepository";
 import { ITransacaoFinanceiraRepository } from "../../modules/transacoes/repositories/ITransacaoFinanceiraRepository";
 import { TransacaoFinanceiraRepository } from "../../modules/transacoes/infra/repositories/TransacaoFinanceiraRepository";
+import { ITipoContaRepository } from "../../modules/contasBancarias/repositories/ITipoContaRepository";
+import { TipoContaRepository } from "../../modules/contasBancarias/infra/repositories/TipoContaRepository";
 
 container.registerSingleton<IUserRepository>(
   "UsersRepository",
@@ -19,4 +21,9 @@ container.registerSingleton<IContasBancariasRepository>(
 container.registerSingleton<ITransacaoFinanceiraRepository>(
   "TransacaoFinanceiraRepository",
   TransacaoFinanceiraRepository
+);
+
+container.registerSingleton<ITipoContaRepository>(
+  "TipoContaRepository",
+  TipoContaRepository
 );

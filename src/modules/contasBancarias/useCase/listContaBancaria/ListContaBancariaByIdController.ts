@@ -13,7 +13,7 @@ class ListContaBancariaByIdController {
       const contaBancaria = await listContaBancariaByIdUseCase.execute(id);
 
       if (contaBancaria) {
-        return response.status(201).send({ contaBancaria });
+        return response.status(200).send({ contaBancaria });
       }
 
       return response

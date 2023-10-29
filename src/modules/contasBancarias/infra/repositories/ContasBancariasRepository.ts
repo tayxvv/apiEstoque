@@ -7,8 +7,15 @@ import { Connection } from "../../../../shared/infra/database/Connection";
 class ContasBancariasRepository implements IContasBancariasRepository {
   connection: any;
 
+  static instance: any;
+
   constructor() {
-    this.connection = new Connection();
+    if (!ContasBancariasRepository.instance) {
+      ContasBancariasRepository.instance = this;
+      this.connection = new Connection();
+    }
+
+    return ContasBancariasRepository.instance;
   }
 
   async create({

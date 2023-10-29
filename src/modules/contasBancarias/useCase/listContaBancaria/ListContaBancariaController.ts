@@ -11,7 +11,7 @@ class ListContaBancariaController {
     try {
       const contasBancarias = await listContaBancariaUseCase.execute();
 
-      return response.status(201).send({ contasBancarias });
+      return response.status(200).send({ contasBancarias });
     } catch (err) {
       return response.status(400).json({ error: err.message });
     }
