@@ -113,6 +113,11 @@ class ContasBancariasRepository implements IContasBancariasRepository {
     }
 
     await this.connection.query(
+      `DELETE FROM transacao_financeira WHERE id_conta = $1`,
+      [id]
+    );
+
+    await this.connection.query(
       `
       DELETE FROM conta_bancaria
       WHERE id_conta = $1;
