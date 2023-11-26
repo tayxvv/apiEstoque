@@ -3,6 +3,7 @@ import { ContaBancaria } from "../entities/ContaBancaria";
 import { IContasBancariasRepository } from "../../repositories/IContasBancariasRepository";
 import { ICreateContaBancariaDTO } from "../../dto/ICreateContaBancariaDTO";
 import { Connection } from "../../../../shared/infra/database/Connection";
+import { IUpdateContaBancariaDTO } from "../../dto/IUpdateContaBancariaDTO";
 
 class ContasBancariasRepository implements IContasBancariasRepository {
   connection: any;
@@ -81,6 +82,43 @@ class ContasBancariasRepository implements IContasBancariasRepository {
     } else {
       return null;
     }
+  }
+
+  async update({
+    id_conta,
+    numero_conta,
+    saldo,
+    nome_conta,
+    id_tipo_conta,
+  }: IUpdateContaBancariaDTO): Promise<ContaBancaria> {
+    await this.connection.query(
+      "UPDATE conta_bancaria SET saldo = ${novo_saldo}, numero_conta = ${numero_conta}, nome_conta = ${novo_nome_conta}, id_tipo_conta = ${novo_id_tipo_conta} WHERE id_conta = ${id_conta}",
+      {
+        id_conta: id_conta,
+        numero_conta: numero_conta,
+        novo_saldo: saldo,
+        novo_nome_conta: nome_conta,
+        novo_id_tipo_conta: id_tipo_conta,
+      }
+    );
+
+    return;
+  }
+
+  async delete(id: string): Promise<void> {
+    const existingAccount = await this.findById(id);
+
+    if (!existingAccount) {
+      throw new Error("Account not found");
+    }
+
+    await this.connection.query(
+      `
+      DELETE FROM conta_bancaria
+      WHERE id_conta = $1;
+      `,
+      [id]
+    );
   }
 }
 
