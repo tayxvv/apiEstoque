@@ -9,13 +9,12 @@ class AuthenticateUserController {
     const authenticateUserUseCase = container.resolve(AuthenticateUserUseCase);
 
     try {
-      const token = await authenticateUserUseCase.execute(username, password);
-      return response.json({ token });
+      const data = await authenticateUserUseCase.execute(username, password);
+      return response.status(200).send(data);
     } catch (error) {
       if (error instanceof AppError) {
         return response.json({ error: error });
       }
-      console.error(error);
       return response.status(500).json({ error: "Erro interno do servidor" });
     }
   }

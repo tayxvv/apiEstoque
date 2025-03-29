@@ -10,9 +10,8 @@ import { sign } from "jsonwebtoken";
 import auth from "../../../../config/auth";
 
 interface IResponse {
-  username: string;
-  password: string;
   token: string;
+  user: User;
 }
 
 @injectable()
@@ -24,7 +23,7 @@ class AuthenticateUserUseCase {
     private userRepository: IUserRepository
   ) {}
 
-  async execute(username: string, password: string): Promise<String> {
+  async execute(username: string, password: string): Promise<IResponse> {
     try {
       const user = await this.userRepository.findByUserName(username);
       console.log(user);
@@ -42,7 +41,7 @@ class AuthenticateUserUseCase {
       const userId = user.id_usuario;
       const token = sign({ userId }, auth.secret_token, { expiresIn: "1h" });
 
-      return token;
+      return { token, user };
     } catch (error) {
       throw error;
     }
