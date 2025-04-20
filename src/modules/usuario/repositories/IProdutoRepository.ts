@@ -8,6 +8,7 @@ interface IProdutoRepository {
   findByName(email: string): Promise<Produto>;
   findById(id: string): Promise<Produto>;
   selectAll(): Promise<Produto[]>;
+  delete(id: string): Promise<void>;
 }
 
 export { IProdutoRepository };

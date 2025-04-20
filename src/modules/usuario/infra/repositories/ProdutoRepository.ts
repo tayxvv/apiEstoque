@@ -95,8 +95,22 @@ class ProdutoRepository implements IProdutoRepository {
   }
 
   async selectAll(): Promise<Produto[]> {
-    const produtos = await this.connection.query("SELECT * FROM produto");
+    const produtos = await this.connection.query("SELECT * FROM produto where bo_ativo = true");
     return produtos;
+  }
+
+  async delete(id: string): Promise<void> {
+    try {
+      await this.connection.query(
+        "UPDATE produto SET bo_ativo = 'false' where id = ${id}",
+        {
+          id,
+        }
+      );
+    } catch (error) {
+      console.error("Erro ao inativar produto:", error);
+      throw error; // Rejeite a promise com o erro
+    }
   }
 }
 
