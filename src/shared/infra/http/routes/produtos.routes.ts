@@ -12,7 +12,7 @@ const updateProdutosController = new UpdateProdutoController();
 
 produtosRoutes.post("/", authMiddleware, createProdutoController.handle);
 produtosRoutes.get("/", authMiddleware, listProdutosController.handle);
-produtosRoutes.put("/", authMiddleware, updateProdutosController.handle);
+produtosRoutes.put("/:id", authMiddleware, updateProdutosController.handle);
 // produtosRoutes.get("/", listProdutosController.handle);
 // produtosRoutes.post("/", listProdutosController.handle);
 

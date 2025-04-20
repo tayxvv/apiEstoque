@@ -4,7 +4,8 @@ import { container } from "tsyringe";
 
 class UpdateProdutoController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { id, nome_produto, descricao, preco, quantidade_fornecedor, id_categoria } = request.body;
+    const { id } = request.params;
+    const { nome_produto, descricao, preco, quantidade_fornecedor, id_categoria } = request.body;
     const updateProdutoUseCase = container.resolve(UpdateProdutoUseCase);
 
     try {
