@@ -22,6 +22,7 @@ class Connection {
 
     // Conectando ao banco usando a URL completa
     this.db = pgp(dbUrl);
+    console.log('conectou');
   }
 
   // Método para executar consultas
