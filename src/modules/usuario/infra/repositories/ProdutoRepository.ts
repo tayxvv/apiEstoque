@@ -65,7 +65,7 @@ class ProdutoRepository implements IProdutoRepository {
   async findByName(nome_produto: string): Promise<Produto> {
     try {
       const produto = await this.connection.query(
-        "SELECT * FROM produto WHERE nome_produto = ${nome_produto}",
+        "SELECT * FROM produto WHERE nome_produto = ${nome_produto} and bo_ativo = true",
         {
             nome_produto,
         }

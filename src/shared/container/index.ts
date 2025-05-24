@@ -5,6 +5,10 @@ import { IProdutoRepository } from "../../modules/usuario/repositories/IProdutoR
 import { ProdutoRepository } from "../../modules/usuario/infra/repositories/ProdutoRepository";
 import { ICategoriaRepository } from "../../modules/usuario/repositories/ICategoriaRepository";
 import { CategoriaRepository } from "../../modules/usuario/infra/repositories/CategoriaRepository";
+import { ITipoMovimentacaoRepository } from "../../modules/usuario/repositories/ITipoMovimentacaoRepository";
+import { TipoMovimentacaoRepository } from "../../modules/usuario/infra/repositories/TipoMovimentacaoRepository";
+import { IMovimentacaoRepository } from "../../modules/usuario/repositories/IMovimentacaoRepository";
+import { MovimentacaoRepository } from "../../modules/usuario/infra/repositories/MovimentacaoRepository";
 
 container.registerSingleton<IUserRepository>(
   "UsersRepository",
@@ -19,5 +23,15 @@ container.registerSingleton<IProdutoRepository>(
 container.registerSingleton<ICategoriaRepository>(
   "CategoriaRepository",
   CategoriaRepository
+);
+
+container.registerSingleton<ITipoMovimentacaoRepository>(
+  "TipoMovimentacaoRepository",
+  TipoMovimentacaoRepository
+);
+
+container.registerSingleton<IMovimentacaoRepository>(
+  "MovimentacaoRepository",
+  MovimentacaoRepository
 );
 
