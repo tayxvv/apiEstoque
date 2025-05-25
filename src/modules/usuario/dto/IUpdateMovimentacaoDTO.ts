@@ -1,5 +1,4 @@
 interface IUpdateMovimentacaoDTO {
-    id: number;
     observacao: string;
     quantidade: number;
     data: Date;
