@@ -29,16 +29,14 @@ class MovimentacaoRepository implements IMovimentacaoRepository {
     return movimentacao;
   }
 
-  async update(id: string, { observacao, quantidade, data, id_produto, id_tipo_movimentacao }: IUpdateMovimentacaoDTO): Promise<Movimentacao | null> {
+  async update(id: string, { observacao, quantidade, data }: IUpdateMovimentacaoDTO): Promise<Movimentacao | null> {
     try {
       const result = await this.connection.query(
-        "UPDATE movimentacoes SET observacao = $1, quantidade = $2, data = $3, id_produto = $4, id_tipo_movimentacao = $5 WHERE id = $6 RETURNING *",
+        "UPDATE movimentacoes SET observacao = $1, quantidade = $2, data = $3 WHERE id = $6 RETURNING *",
         [
           observacao,
           quantidade,
           data,
-          id_produto,
-          id_tipo_movimentacao,
           id,
         ]
       );

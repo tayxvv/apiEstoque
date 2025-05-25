@@ -10,13 +10,11 @@ class UpdateMovimentacaoUseCase {
     @inject("MovimentacaoRepository")
     private movimentacaoRepository: IMovimentacaoRepository
   ) {}
-  async execute(id: string, { observacao, quantidade, data, id_produto, id_tipo_movimentacao }: IUpdateMovimentacaoDTO): Promise<Movimentacao> {
+  async execute(id: string, { observacao, quantidade, data }: IUpdateMovimentacaoDTO): Promise<Movimentacao> {
     const movimentacao = await this.movimentacaoRepository.update(id, {
       observacao, 
       quantidade, 
-      data, 
-      id_produto, 
-      id_tipo_movimentacao
+      data
     });
     return movimentacao;
   }
