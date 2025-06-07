@@ -1,7 +1,7 @@
 interface IUpdateMovimentacaoDTO {
     observacao: string;
     quantidade: number;
-    data: Date;
+    data: string;
   }
   
 export { IUpdateMovimentacaoDTO };

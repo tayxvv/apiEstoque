@@ -2,11 +2,11 @@ class Movimentacao {
     id: number;
     observacao: string;
     quantidade: number;
-    data: Date;
+    data: string;
     id_produto: number;
     id_tipo_movimentacao: number;
   
-    constructor(observacao: string, quantidade: number, data: Date, id_produto: number, id_tipo_movimentacao: number) {
+    constructor(observacao: string, quantidade: number, data: string, id_produto: number, id_tipo_movimentacao: number) {
       this.observacao = observacao;
       this.quantidade = quantidade;
       this.data = data;
