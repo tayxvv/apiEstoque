@@ -1,55 +1,82 @@
 import { Fornecedor } from "../entities/Fornecedor";
 import { IFornecedorRepository } from "../../repositories/IFornecedorRepository";
-import { ICreateFornecedorDTO } from "../../dto/ICreateFornecedorDTO";
 import { IUpdateFornecedorDTO } from "../../dto/IUpdateFornecedorDTO";
+import { ICreateFornecedorRawDTO } from "../../dto/ICreateFornecedorRawDTO";
 import { Connection } from "../../../../shared/infra/database/Connection";
 
 class FornecedorRepository implements IFornecedorRepository {
-  private connection: any;
+  connection: any;
 
   constructor() {
     this.connection = new Connection();
   }
 
-  async create(data: ICreateFornecedorDTO): Promise<Fornecedor> {
+  async create({ nome, email, id_telefone, id_endereco }: ICreateFornecedorRawDTO): Promise<Fornecedor> {
     const result = await this.connection.query(
-      `INSERT INTO fornecedores (nome, email, id_endereco, id_telefone)
-       VALUES (${data.nome}, ${data.email}, ${data.endereco}, ${data.telefone})
-       RETURNING *`
+      `INSERT INTO fornecedores (nome, email, id_telefone, id_endereco)
+       VALUES ($1, $2, $3, $4)
+       RETURNING *`,
+      [nome, email, id_telefone, id_endereco]
     );
 
-    return result[0];
+    const row = result.rows[0];
+    const fornecedor = new Fornecedor(row.nome, row.email, row.id_telefone, row.id_endereco);
+    fornecedor.id = row.id;
+    return fornecedor;
   }
 
-  async update(id: number, data: IUpdateFornecedorDTO): Promise<Fornecedor> {
+  async update(id: string, { nome, email, telefone, endereco }: IUpdateFornecedorDTO): Promise<Fornecedor | null> {
     const result = await this.connection.query(
-      `UPDATE fornecedores SET nome = $1, email = $2 WHERE id = $3 RETURNING *`,
-      [data.nome, data.email, id]
+      `UPDATE fornecedores 
+       SET nome = $1, email = $2, id_telefone = $3, id_endereco = $4 
+       WHERE id = $5 
+       RETURNING *`,
+      [nome, email, telefone, endereco, id] // Aqui telefone e endereco devem ser os IDs
     );
 
-    return result.rows[0];
+    if (result.rows && result.rows.length > 0) {
+      const updated = result.rows[0];
+      const fornecedor = new Fornecedor(
+        updated.nome,
+        updated.email,
+        updated.id_telefone,
+        updated.id_endereco
+      );
+      fornecedor.id = updated.id;
+      return fornecedor;
+    }
+
+    return null;
   }
 
-  async findById(id: number): Promise<Fornecedor | null> {
+  async findById(id: string): Promise<Fornecedor | null> {
     const result = await this.connection.query(
-      `SELECT * FROM fornecedores WHERE id = ${id}`
+      `SELECT * FROM fornecedores WHERE id = $1`,
+      [id]
     );
 
-    return result.length > 0 ? result[0] : null;
-  }
-
-  async delete(id: number): Promise<void> {
-    await this.connection.query(
-      `DELETE FROM fornecedores WHERE id = ${id}`
-    );
+    return result.rows?.[0] || null;
   }
 
   async findByName(nome: string): Promise<Fornecedor | null> {
     const result = await this.connection.query(
-      `SELECT * FROM fornecedores WHERE nome = ${nome}`
+      `SELECT * FROM fornecedores WHERE nome = $1`,
+      [nome]
     );
 
-    return result.length > 0 ? result[0] : null;
+    return result.rows?.[0] || null;
+  }
+
+  async selectAll(): Promise<Fornecedor[]> {
+    const result = await this.connection.query(`SELECT * FROM fornecedores`);
+    return result.rows;
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.connection.query(
+      `DELETE FROM fornecedores WHERE id = $1`,
+      [id]
+    );
   }
 }
 
