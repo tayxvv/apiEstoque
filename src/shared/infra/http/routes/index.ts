@@ -14,6 +14,6 @@ router.use("/produtos", produtosRoutes);
 router.use("/categorias", categoriasRoutes);
 router.use("/tipo-movimentacao", tipoMovimentacaoRoutes);
 router.use("/movimentacao", movimentacoesRoutes);
-router.use("/fornecedor", fornecedoresRoutes);
+router.use("/fornecedores", fornecedoresRoutes);
 
 export { router };
