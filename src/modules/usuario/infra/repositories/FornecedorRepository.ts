@@ -23,8 +23,12 @@ class FornecedorRepository implements IFornecedorRepository {
     const fornecedor = new Fornecedor(nome, email, telefone, rua, bairro, numero, quadra);
 
     await this.connection.query(
-      `INSERT INTO fornecedores (nome, email, telefone, rua, bairro, quadra, numero, bo_ativo)
-       VALUES (${nome}, ${email}, ${telefone}, ${rua}, ${bairro}, ${quadra}, ${numero}, true)`,
+      `
+      INSERT INTO fornecedores 
+        (nome, email, telefone, rua, bairro, quadra, numero, bo_ativo)
+      VALUES 
+        (\${nome}, \${email}, \${telefone}, \${rua}, \${bairro}, \${quadra}, \${numero}, true)
+      `,
       {
         nome: fornecedor.nome,
         email: fornecedor.email,
@@ -50,7 +54,8 @@ class FornecedorRepository implements IFornecedorRepository {
   }: IUpdateFornecedorDTO): Promise<Fornecedor | null> {
     try {
       const result = await this.connection.query(
-        `UPDATE fornecedores SET nome = $1, email = $2, telefone = $3, rua = $4, bairro = $5, quadra = $6, numero = $7
+        `UPDATE fornecedores 
+         SET nome = $1, email = $2, telefone = $3, rua = $4, bairro = $5, quadra = $6, numero = $7
          WHERE id = $8 RETURNING *`,
         [nome, email, telefone, rua, bairro, quadra, numero, id]
       );
@@ -107,7 +112,9 @@ class FornecedorRepository implements IFornecedorRepository {
 
   async selectAll(): Promise<Fornecedor[]> {
     try {
-      const fornecedores = await this.connection.query("SELECT * FROM fornecedores WHERE bo_ativo = true");
+      const fornecedores = await this.connection.query(
+        "SELECT * FROM fornecedores WHERE bo_ativo = true"
+      );
 
       return fornecedores.map((row: any) => {
         const fornecedor = new Fornecedor(
