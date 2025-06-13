@@ -12,10 +12,15 @@ class UpdateFornecedorUseCase {
     private fornecedorRepository: IFornecedorRepository
   ) {}
 
-  async execute(
-    id: string,
-    { nome, email, telefone, endereco }: IUpdateFornecedorDTO
-  ): Promise<Fornecedor> {
+  async execute(id: string, {
+    nome,
+    email,
+    telefone,
+    rua,
+    bairro,
+    quadra,
+    numero
+  }: IUpdateFornecedorDTO): Promise<Fornecedor> {
     const fornecedorExists = await this.fornecedorRepository.findById(id);
 
     if (!fornecedorExists) {
@@ -26,10 +31,13 @@ class UpdateFornecedorUseCase {
       nome,
       email,
       telefone,
-      endereco,
+      rua,
+      bairro,
+      quadra,
+      numero
     });
 
-    return fornecedor;
+    return fornecedor!;
   }
 }
 

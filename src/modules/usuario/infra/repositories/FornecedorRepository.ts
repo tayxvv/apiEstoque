@@ -1,7 +1,7 @@
 import { Fornecedor } from "../entities/Fornecedor";
 import { IFornecedorRepository } from "../../repositories/IFornecedorRepository";
+import { ICreateFornecedorDTO } from "../../dto/ICreateFornecedorDTO";
 import { IUpdateFornecedorDTO } from "../../dto/IUpdateFornecedorDTO";
-import { ICreateFornecedorRawDTO } from "../../dto/ICreateFornecedorRawDTO";
 import { Connection } from "../../../../shared/infra/database/Connection";
 
 class FornecedorRepository implements IFornecedorRepository {
@@ -11,72 +11,133 @@ class FornecedorRepository implements IFornecedorRepository {
     this.connection = new Connection();
   }
 
-  async create({ nome, email, id_telefone, id_endereco }: ICreateFornecedorRawDTO): Promise<Fornecedor> {
-    const result = await this.connection.query(
-      `INSERT INTO fornecedores (nome, email, id_telefone, id_endereco)
-       VALUES ($1, $2, $3, $4)
-       RETURNING *`,
-      [nome, email, id_telefone, id_endereco]
+  async create({
+    nome,
+    email,
+    telefone,
+    rua,
+    bairro,
+    quadra,
+    numero
+  }: ICreateFornecedorDTO): Promise<Fornecedor> {
+    const fornecedor = new Fornecedor(nome, email, telefone, rua, bairro, numero, quadra);
+
+    await this.connection.query(
+      `INSERT INTO fornecedores (nome, email, telefone, rua, bairro, quadra, numero, bo_ativo)
+       VALUES (${nome}, ${email}, ${telefone}, ${rua}, ${bairro}, ${quadra}, ${numero}, true)`,
+      {
+        nome: fornecedor.nome,
+        email: fornecedor.email,
+        telefone: fornecedor.telefone,
+        rua: fornecedor.rua,
+        bairro: fornecedor.bairro,
+        quadra: fornecedor.quadra,
+        numero: fornecedor.numero
+      }
     );
 
-    const row = result.rows[0];
-    const fornecedor = new Fornecedor(row.nome, row.email, row.id_telefone, row.id_endereco);
-    fornecedor.id = row.id;
     return fornecedor;
   }
 
-  async update(id: string, { nome, email, telefone, endereco }: IUpdateFornecedorDTO): Promise<Fornecedor | null> {
-    const result = await this.connection.query(
-      `UPDATE fornecedores 
-       SET nome = $1, email = $2, id_telefone = $3, id_endereco = $4 
-       WHERE id = $5 
-       RETURNING *`,
-      [nome, email, telefone, endereco, id] // Aqui telefone e endereco devem ser os IDs
-    );
-
-    if (result.rows && result.rows.length > 0) {
-      const updated = result.rows[0];
-      const fornecedor = new Fornecedor(
-        updated.nome,
-        updated.email,
-        updated.id_telefone,
-        updated.id_endereco
+  async update(id: string, {
+    nome,
+    email,
+    telefone,
+    rua,
+    bairro,
+    quadra,
+    numero
+  }: IUpdateFornecedorDTO): Promise<Fornecedor | null> {
+    try {
+      const result = await this.connection.query(
+        `UPDATE fornecedores SET nome = $1, email = $2, telefone = $3, rua = $4, bairro = $5, quadra = $6, numero = $7
+         WHERE id = $8 RETURNING *`,
+        [nome, email, telefone, rua, bairro, quadra, numero, id]
       );
-      fornecedor.id = updated.id;
-      return fornecedor;
-    }
 
-    return null;
+      if (result.rows && result.rows.length > 0) {
+        const row = result.rows[0];
+        const fornecedorAtualizado = new Fornecedor(
+          row.nome,
+          row.email,
+          row.telefone,
+          row.rua,
+          row.bairro,
+          row.numero,
+          row.quadra
+        );
+        fornecedorAtualizado.id = row.id;
+        return fornecedorAtualizado;
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Erro ao atualizar fornecedor:", error);
+      throw error;
+    }
   }
 
   async findById(id: string): Promise<Fornecedor | null> {
-    const result = await this.connection.query(
-      `SELECT * FROM fornecedores WHERE id = $1`,
-      [id]
-    );
+    try {
+      const fornecedor = await this.connection.query(
+        "SELECT * FROM fornecedores WHERE id = ${id} AND bo_ativo = true",
+        { id }
+      );
 
-    return result.rows?.[0] || null;
+      return fornecedor[0] || null;
+    } catch (error) {
+      console.error("Erro ao buscar fornecedor por ID:", error);
+      throw error;
+    }
   }
 
   async findByName(nome: string): Promise<Fornecedor | null> {
-    const result = await this.connection.query(
-      `SELECT * FROM fornecedores WHERE nome = $1`,
-      [nome]
-    );
+    try {
+      const fornecedor = await this.connection.query(
+        "SELECT * FROM fornecedores WHERE nome = ${nome} AND bo_ativo = true",
+        { nome }
+      );
 
-    return result.rows?.[0] || null;
+      return fornecedor[0] || null;
+    } catch (error) {
+      console.error("Erro ao buscar fornecedor por nome:", error);
+      throw error;
+    }
   }
 
   async selectAll(): Promise<Fornecedor[]> {
-    const result = await this.connection.query(`SELECT * FROM fornecedores`);
-    return result.rows;
+    try {
+      const fornecedores = await this.connection.query("SELECT * FROM fornecedores WHERE bo_ativo = true");
+
+      return fornecedores.map((row: any) => {
+        const fornecedor = new Fornecedor(
+          row.nome,
+          row.email,
+          row.telefone,
+          row.rua,
+          row.bairro,
+          row.numero,
+          row.quadra
+        );
+        fornecedor.id = row.id;
+        return fornecedor;
+      });
+    } catch (error) {
+      console.error("Erro ao listar fornecedores:", error);
+      throw error;
+    }
   }
 
   async delete(id: string): Promise<void> {
-    await this.connection.query(
-      `DELETE FROM fornecedores WHERE id = $1`,
-      [id]
-    );
+    try {
+      await this.connection.query(
+        "UPDATE fornecedores SET bo_ativo = false WHERE id = ${id}",
+        { id }
+      );
+    } catch (error) {
+      console.error("Erro ao inativar fornecedor:", error);
+      throw error;
+    }
   }
 }
 

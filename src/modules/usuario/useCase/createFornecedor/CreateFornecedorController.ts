@@ -4,7 +4,15 @@ import { CreateFornecedorUseCase } from "./CreateFornecedorUseCase";
 
 class CreateFornecedorController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const { nome, email, telefone, endereco } = request.body;
+    const {
+      nome,
+      email,
+      telefone,
+      rua,
+      bairro,
+      quadra,
+      numero
+    } = request.body;
 
     const createFornecedorUseCase = container.resolve(CreateFornecedorUseCase);
 
@@ -12,12 +20,15 @@ class CreateFornecedorController {
       const fornecedor = await createFornecedorUseCase.execute({
         nome,
         email,
-        telefone, // { numero }
-        endereco, // { rua, numero, bairro, quadra }
+        telefone,
+        rua,
+        bairro,
+        quadra,
+        numero
       });
 
       return response.status(201).json(fornecedor);
-    } catch (err) {
+    } catch (err: any) {
       return response.status(400).json({ error: err.message });
     }
   }

@@ -2,14 +2,28 @@ class Fornecedor {
   id: number;
   nome: string;
   email: string;
-  id_endereco: string;
-  id_telefone: string;
+  telefone: string;
+  rua: string;
+  bairro: string;
+  quadra?: string;
+  numero: string;
 
-  constructor(nome: string, email: string, id_endereco: string, id_telefone: string) {
+  constructor(
+    nome: string,
+    email: string,
+    telefone: string,
+    rua: string,
+    bairro: string,
+    numero: string,
+    quadra?: string
+  ) {
     this.nome = nome;
     this.email = email;
-    this.id_endereco = id_endereco;
-    this.id_telefone = id_telefone;
+    this.telefone = telefone;
+    this.rua = rua;
+    this.bairro = bairro;
+    this.numero = numero;
+    this.quadra = quadra;
   }
 }
 

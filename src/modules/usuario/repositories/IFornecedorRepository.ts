@@ -1,14 +1,14 @@
-import { Fornecedor } from "../infra/entities/Fornecedor";
-import { ICreateFornecedorRawDTO } from "../dto/ICreateFornecedorRawDTO"; // <- CORRETO
+import { ICreateFornecedorDTO } from "../dto/ICreateFornecedorDTO";
 import { IUpdateFornecedorDTO } from "../dto/IUpdateFornecedorDTO";
+import { Fornecedor } from "../infra/entities/Fornecedor";
 
 interface IFornecedorRepository {
-  create(data: ICreateFornecedorRawDTO): Promise<Fornecedor>; // <- alterado aqui
+  create(data: ICreateFornecedorDTO): Promise<Fornecedor>;
   update(id: string, data: IUpdateFornecedorDTO): Promise<Fornecedor>;
-  findById(id: string): Promise<Fornecedor | null>;
-  findByName(nome: string): Promise<Fornecedor | null>;
-  delete(id: string): Promise<void>;
+  findByName(nome: string): Promise<Fornecedor>;
+  findById(id: string): Promise<Fornecedor>;
   selectAll(): Promise<Fornecedor[]>;
+  delete(id: string): Promise<void>;
 }
 
 export { IFornecedorRepository };

@@ -1,15 +1,11 @@
 interface IUpdateFornecedorDTO {
   nome: string;
   email: string;
-  telefone: {
-    numero: string;
-  };
-  endereco: {
-    rua: string;
-    numero: string;
-    bairro: string;
-    quadra: string;
-  };
+  telefone:string;
+  rua: string;
+  bairro: string;
+  quadra?: string;
+  numero: string;
 }
 
 export { IUpdateFornecedorDTO };

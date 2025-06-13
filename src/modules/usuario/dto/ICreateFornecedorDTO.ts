@@ -1,15 +1,12 @@
 interface ICreateFornecedorDTO {
+  id?: number;
   nome: string;
   email: string;
-  endereco: {
-    rua: string;
-    numero: string;
-    bairro: string;
-    quadra?: string;
-  };
-  telefone: {
-    numero: string;
-  };
+  telefone:string;
+  rua: string;
+  bairro: string;
+  quadra?: string;
+  numero: string;
 }
 
 export { ICreateFornecedorDTO };

@@ -4,10 +4,10 @@ import { container } from "tsyringe";
 
 class ListFornecedorController {
   async handle(request: Request, response: Response): Promise<Response> {
-    const listProdutoUseCase = container.resolve(ListFornecedorUseCase);
+    const listFornecedorUseCase = container.resolve(ListFornecedorUseCase);
 
     try {
-      const produtos = await listProdutoUseCase.execute();
+      const produtos = await listFornecedorUseCase.execute();
 
       return response.status(200).send(produtos);
     } catch (err) {
