@@ -2,6 +2,7 @@ import { Router } from "express";
 import { usersRoutes } from "./users.routes";
 import { authenticateRoutes } from "./authenticateUser.routes";
 import { produtosRoutes } from "./produtos.routes";
+import { fornecedoresRoutes } from "./fornecedor.routes";
 import { categoriasRoutes } from "./categorias.routes";
 import { tipoMovimentacaoRoutes } from "./tipomovimentacao.routes";
 import { movimentacoesRoutes } from "./movimentacao.routes";
@@ -13,5 +14,6 @@ router.use("/produtos", produtosRoutes);
 router.use("/categorias", categoriasRoutes);
 router.use("/tipo-movimentacao", tipoMovimentacaoRoutes);
 router.use("/movimentacao", movimentacoesRoutes);
+router.use("/fornecedor", fornecedoresRoutes);
 
 export { router };
